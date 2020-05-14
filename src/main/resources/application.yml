@@ -1,0 +1,38 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    consumer:
+      group-id: ${KAFKA_GROUP_ID}
+      auto-offset-reset: ${KAFKA_OFFSET_RESET:earliest}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: true
+    producer:
+      acks: ${KAFKA_PRODUCER_ACKS:1}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    properties:
+      security:
+        protocol: SASL_SSL
+      ssl:
+        truststore:
+          type: JKS
+          location: ${CERT_LOCATION}
+          password: ${CERT_PASSWORD}
+      sasl:
+        mechanism: SCRAM-SHA-256
+        jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USER}" password="${KAFKA_PASSWORD}";
+
+kafka:
+  bootstrapServers: ${KAFKA_BROKERS}
+  user: ${KAFKA_USER}
+  password: ${KAFKA_PASSWORD}
+  trustStoreLocation: ${CERT_LOCATION}
+  trustStorePassword: ${CERT_PASSWORD}
+  groupId: ${KAFKA_GROUP_ID}
+  acks: ${KAFKA_PRODUCER_ACKS:1}
+  offSetReset: ${KAFKA_OFFSET_RESET:earliest}
+  dremioTopic: ${DREMIO_TOPIC}
